@@ -1,0 +1,74 @@
+services:
+  # ---------------------------------------------------------------------------
+  # Backend Ktor: se construye desde el Dockerfile del módulo :server
+  # ---------------------------------------------------------------------------
+  ktor:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: toto-ktor
+    restart: unless-stopped
+    ports:
+      - "8080:8080"          # http://localhost:8080
+    environment:
+      # La app lee estas variables para conectar a la BD.
+      # OJO: el host NO es localhost, es el nombre del servicio -> "mariadb"
+      DB_URL: "jdbc:mariadb://mariadb:3306/${DB_NAME:-toto}"
+      DB_USER: "${DB_USER:-toto}"
+      DB_PASSWORD: "${DB_PASSWORD:-toto}"
+    depends_on:
+      mariadb:
+        condition: service_healthy   # no arranca Ktor hasta que la BD responde
+    networks:
+      - toto-net
+
+  # ---------------------------------------------------------------------------
+  # Base de datos MariaDB
+  # ---------------------------------------------------------------------------
+  mariadb:
+    image: mariadb:11
+    container_name: toto-mariadb
+    restart: unless-stopped
+    ports:
+      - "3307:3306"          # host 3307 (el 3306 ya lo usa otro proyecto). Interno sigue siendo 3306.
+    environment:
+      MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
+      MARIADB_DATABASE: "${DB_NAME:-toto}"
+      MARIADB_USER: "${DB_USER:-toto}"
+      MARIADB_PASSWORD: "${DB_PASSWORD:-toto}"
+    volumes:
+      - mariadb-data:/var/lib/mysql   # persiste los datos aunque borres el contenedor
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - toto-net
+
+  # ---------------------------------------------------------------------------
+  # phpMyAdmin: UI web para administrar la BD
+  # ---------------------------------------------------------------------------
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: toto-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"            # http://localhost:8081
+    environment:
+      PMA_HOST: mariadb       # apunta al servicio de la BD por su nombre
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - toto-net
+
+networks:
+  toto-net:
+    driver: bridge
+
+volumes:
+  mariadb-data:

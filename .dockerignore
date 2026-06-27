@@ -1,0 +1,27 @@
+# Salidas de compilación (Docker las regenera dentro)
+**/build/
+.gradle/
+**/.gradle/
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+
+# Control de versiones
+.git/
+.gitignore
+
+# macOS
+**/.DS_Store
+
+# iOS: no se compila en Docker
+iosApp/
+
+# Configuración local y secretos (no deben entrar en la imagen)
+local.properties
+.env
+
+# Dockerfile / compose (no se necesitan dentro de la imagen)
+**/Dockerfile
+compose.yml
