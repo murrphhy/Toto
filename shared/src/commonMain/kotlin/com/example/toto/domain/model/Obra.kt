@@ -3,12 +3,12 @@ package com.example.toto.domain.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Movie(
+data class Obra(
     val id: Int,
-    val name: String,
-    val shortDescription: String,
-    val longDescription: String,
-    val releaseDate: String,
+    val nombre: String,
+    val descripcion_corta: String,
+    val descripcion_larga: String,
+    val fecha: String,
     val director: String,
     val posterUrl: String? = null
 )

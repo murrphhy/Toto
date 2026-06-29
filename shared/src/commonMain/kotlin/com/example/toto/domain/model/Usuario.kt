@@ -3,10 +3,10 @@ package com.example.toto.domain.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User(
+data class Usuario(
     val id: Int,
-    val name: String,
+    val nombre: String,
     val email: String,
-    val phone: String? = null,
-    val role: String = "USER"
+    val telefono: String? = null,
+    val rol: String = "USER"
 )

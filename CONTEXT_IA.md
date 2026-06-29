@@ -111,13 +111,13 @@ A continuación se detalla la estructura física y lógica de las tablas según 
     - `Fecha`
     - `Director`
 
-5. **Valoración** (Entidad asociativa de la relación *Puntua*)
+5. **Valoración** (Entidad asociativa de la relación *Puntúa*)
     - `Id` (Clave Primaria)
     - `Puntuación` (Escala numérica o estrellas)
     - `Descripción` (Texto de la crítica/reseña)
     - `id_Usuario` (Clave Foránea a Usuario)
     - `id_Obra` (Clave Foránea a Obras)
-      *Relación:* Un **Usuario** *Puntua* muchas **Obras** a través de esta entidad intermedia.
+      *Relación:* Un **Usuario** *Puntúa* muchas **Obras** a través de esta entidad intermedia.
 
 6. **Actor**
     - `id` (Clave Primaria)
@@ -135,7 +135,8 @@ A continuación se detalla la estructura física y lógica de las tablas según 
 8. **Lista** (Agrupaciones Temáticas / Watchlist)
     - `id` (Clave Primaria)
     - `Titulo`
-      *Relación:* Una **Lista** contiene/agrega de forma lógica múltiples **Obras** (Relación de agregación representada en el diagrama).
+    - `id_Usuario` (Clave Foránea a Usuario)
+      *Relación:* Un **Usuario** *Crea* muchas **Listas** (Relación 1:M). Además, una **Lista** contiene/agrega de forma lógica múltiples **Obras** (Relación de agregación representada en el diagrama).
 
 ---
 
